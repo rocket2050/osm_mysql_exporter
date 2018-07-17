@@ -1,5 +1,4 @@
 ---
-
 - name: Add the user mysql_exporter
   user:
    name: mysql_exporter
@@ -31,3 +30,18 @@
    owner: mysql_exporter
    group: mysql_exporter
    mode: 755
+
+- name: Set ENV Path
+  lineinfile:
+    path: /root/.bashrc
+    insertafter: "EOF"
+    line: "export DATA_SOURCE_NAME='root:{{ db_admin }}@unix(/var/run/mysqld/mysqld.sock)/'"
+  tags:
+    - env
+
+- name: Executing Script
+  shell: source /root/.bashrc
+  args:
+    executable: /bin/bash
+  tags:
+    - env
